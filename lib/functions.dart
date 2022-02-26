@@ -37,7 +37,7 @@ Future<File> initFirstTime() async {
     List<String> fpaths = await getFilePaths();
     String inviatore = fpaths[0], ricevitore = fpaths[1];
 
-    String path = user + r'\redundantfolder\';
+    String path = user + r'\RedundantFolder\';
 
     await createAndWriteS(join(path, "info.json"), map(inviatore, ricevitore));
     Uint8List content = await File(Platform.executable).readAsBytes();
