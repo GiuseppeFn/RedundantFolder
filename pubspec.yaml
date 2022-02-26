@@ -1,0 +1,10 @@
+name: echodfile
+version: 0.0.1
+
+environment:
+  sdk: ">=2.15.2 <3.0.0"
+
+dependencies:
+  path: ^1.8.1
+  process_run: ^0.12.3+2
+  win32: ^2.4.1
