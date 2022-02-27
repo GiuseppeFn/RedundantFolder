@@ -25,4 +25,4 @@
   (Argomento sato per capire in che directory si trova il programma, che, in qualsiasi altro modo come Directory.current o Platform.executable, ritornerebbe il percorso del primo eseguibile, o del file bat che lo avvia).
 
   Nel caso in cui il programma sia avviato con degli argomenti, allora:
-  La finestra del cmd viene nascosta, usando le api di win32, il file info.json viene letto e trasformato in una Mappa, e con Timer.periodic viene avviata ogni 3 secondi una funzione che runna ```robocopy```, una funzione per tenere due cartelle completamente uguali, nativa di windows.
+  La finestra del cmd viene nascosta, usando le api di win32, il file info.json viene letto e trasformato in una Mappa, e con il package watcher ad ogni cambiamento della cartella inviatrice o della cartella ricevitrice runna ```robocopy```, una funzione per tenere due cartelle completamente uguali, nativa di windows. (La cartella inviatrice non riceverà mai cambiamenti dal file, l'unica che ne riceverà sarà la cartella ricevitrice)
