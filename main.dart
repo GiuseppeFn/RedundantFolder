@@ -3,7 +3,9 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:isolate';
 
+import 'package:echodfile/utility.dart';
 import 'package:path/path.dart';
+import 'package:watcher/watcher.dart';
 import 'package:win32/win32.dart';
 
 import './lib/functions.dart';
@@ -16,6 +18,12 @@ void main(List<String> args) async {
     String newExePath = (await initFirstTime()).absolute.path;
     await Isolate.spawn(createProcess, newExePath);
     await createBat(newExePath);
+    print("Premi un tasto per continuare...");
+    Future.delayed(Duration(seconds: 1));
+    stdin
+      ..echoMode = false
+      ..lineMode = false;
+    stdin.listen((_) => exit(0));
     return;
   }
 
@@ -24,16 +32,14 @@ void main(List<String> args) async {
   File json_info = File(join(prgm, 'info.json'));
   Map<String, dynamic> info = json.decode(await json_info.readAsString());
 
-  await Timer.periodic(Duration(seconds: 3), (timer) async {
-    await Process.run(
-      'robocopy',
-      [
-        info['cartella_inviatore']!.toString().replaceAll("file:///", ""),
-        info['cartella_ricevitore']!.toString().replaceAll("file:///", ""),
-        '/E',
-        '/MIR'
-      ],
-      runInShell: true,
-    );
-  });
+  String inviatore = uriToPath(info['cartella_inviatore']),
+      ricevitore = uriToPath(info['cartella_ricevitore']);
+
+  await DirectoryWatcher(inviatore)
+      .events
+      .listen((event) => debouncedRobocopy(inviatore, ricevitore, 500));
+
+  await DirectoryWatcher(ricevitore)
+      .events
+      .listen((event) => debouncedRobocopy(inviatore, ricevitore, 500));
 }

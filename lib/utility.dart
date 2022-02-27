@@ -31,3 +31,5 @@ Future<File> createAndWriteB(String path, Uint8List content) async =>
     await File(path)
       ..create(recursive: true)
       ..writeAsBytes(content);
+
+String uriToPath(dynamic s) => s.toString().replaceAll("file:///", "");

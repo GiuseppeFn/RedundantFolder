@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -24,9 +25,9 @@ Future<String> getFolderName(String fname) async {
 Future<List<String>> getFilePaths() async {
   print("Sembra che è la prima volta che avvii il programma. ");
   String cartella_inviatore = debug ? inv : await getFolderName('inviatore');
-  print("Perfetto, file 'inviatore' settato.");
+  print("Perfetto, cartella 'inviatore' settato.");
   String cartella_ricevitore = debug ? ric : await getFolderName('ricevitore');
-  print("Perfetto, file 'ricevitore' settato.");
+  print("Perfetto, cartella 'ricevitore' settato.");
   return [cartella_inviatore, cartella_ricevitore];
 }
 
@@ -69,3 +70,14 @@ void createProcess(String path) => Process.run(
       ['/MIN', '"RedundantFolder"', path, dirname(path)],
       runInShell: true,
     ).ignore();
+
+void robocopy(String inviatore, String ricevitore) async => await Process.run(
+      'robocopy',
+      [inviatore, ricevitore, '/E', '/MIR'],
+      runInShell: true,
+    );
+
+void debouncedRobocopy(String inviatore, String ricevitore, int ms) => Timer(
+      Duration(milliseconds: ms),
+      () async => robocopy(inviatore, ricevitore),
+    );
